@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Diagnostics;
 using Amnesia.classes.Uno;
 using Amnesia.interfaces;
 
@@ -8,8 +7,18 @@ namespace Amnesia.components.Uno
     public class Card : IDrawable, ICloneable
     {
 
-        private bool _isDeck = false;
+        private readonly bool _isDeck;
+        public ConsoleColor Color { get; set; }
+        public bool WhiteCard { get; set; }
+        public string Value { get; set; }
+        public bool IsSelected { get; set; }
+        public int X { get; set; } = 0;
+        public int Y { get; set; } = 0;
+        public static int Width => CardManager.LongestCard + 4;
         
+        /// <summary>
+        /// Constructor for a card without value
+        /// </summary>
         public Card()
         {
             Value = "****";
@@ -18,6 +27,11 @@ namespace Amnesia.components.Uno
             _isDeck = true;
         }
         
+        /// <summary>
+        /// Constructor for a card
+        /// </summary>
+        /// <param name="value">Value of card</param>
+        /// <param name="color">Color of card</param>
         public Card(string value, ConsoleColor color = ConsoleColor.White)
         {
             Value = value;
@@ -25,6 +39,10 @@ namespace Amnesia.components.Uno
             IsSelected = false;
         }
 
+        /// <summary>
+        /// Constructor for a card
+        /// </summary>
+        /// <param name="card">OldCard (Use for clone item)</param>
         private Card(Card card)
         {
             Value = card.Value;
@@ -34,15 +52,12 @@ namespace Amnesia.components.Uno
             X = card.X;
             Y = card.Y;
         }
-        
-        public ConsoleColor Color { get; set; }
-        public string Value { get; set; }
-        public bool IsSelected { get; set; }
-        public int X { get; set; } = 0;
-        public int Y { get; set; } = 0;
 
-        public static int Width => CardManager.LongestCard + 4;
-
+        /// <summary>
+        /// Move card to left
+        /// </summary>
+        /// <param name="min">Minimum position</param>
+        /// <param name="max">Maximum position</param>
         public void MoveLeft(int min, int max)
         {
             X += Width;
@@ -54,6 +69,12 @@ namespace Amnesia.components.Uno
                 X = max;
             }
         }
+        
+        /// <summary>
+        /// Move card to right
+        /// </summary>
+        /// <param name="min">Minimum position</param>
+        /// <param name="max">Maximum position</param>
         public void MoveRight(int min, int max)
         {
             X -= Width;
@@ -66,12 +87,18 @@ namespace Amnesia.components.Uno
             }
         }
 
+        /// <summary>
+        /// Check if card is drawable
+        /// </summary>
+        /// <returns>Boolean</returns>
         public bool IsDrawn()
         {
-            Debug.WriteLine($"IsDraw: {X}, {Y}, {Width}, ");
             return !(X < 0 || X + Width >= Console.WindowWidth-1 || Y < 0 || Y + 5 >= Console.WindowHeight-1);
         }
-                                                                                                                                                                                                                                            
+               
+        /// <summary>
+        /// Display card in console
+        /// </summary>
         public void Draw()
         {
             if (!IsDrawn()) return;
@@ -129,22 +156,44 @@ namespace Amnesia.components.Uno
             }
         }
 
-        public void Clear()
+        /// <summary>
+        /// Clear card in console
+        /// </summary>
+        /// <param name="full">If we clear only value or all element</param>
+        public void Clear(bool full = false)
         {
             Console.BackgroundColor = ConsoleColor.Black;
             if (!IsDrawn()) return;
-            for (var i = X; i < X+Width; i++)
+            var windowWidth = Console.WindowWidth;
+            var windowHeight = Console.WindowHeight;
+            if (full)
             {
-                for (var j = Y; j < Y+5; j++)
+                for (var i = X; i < X+Width && X+Width < windowWidth; i++)
                 {
-                    Debug.WriteLine($"X: {X}, Y: {Y}");
-                    Debug.WriteLine($"{Console.WindowWidth}, {Console.WindowHeight}");
-                    Console.SetCursorPosition(i,j);
-                    Console.Write(" ");
+                    for (var j = Y; j < Y+5 && Y+5 < windowHeight; j++)
+                    {
+                        Console.SetCursorPosition(i,j);
+                        Console.Write(" ");
+                    }
+                }
+            }
+            else
+            {
+                for (var i = X+1; i < X+Width-1 && X+Width-1 < windowWidth; i++)
+                {
+                    for (var j = Y+1; j < Y+4 && Y+4 < windowHeight; j++)
+                    {
+                        Console.SetCursorPosition(i,j);
+                        Console.Write(" ");
+                    }
                 }
             }
         }
 
+        /// <summary>
+        /// Clone this card
+        /// </summary>
+        /// <returns>Card</returns>
         public object Clone()
         {
             return new Card(this);

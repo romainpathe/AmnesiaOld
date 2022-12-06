@@ -11,9 +11,11 @@ namespace Amnesia.classes.Uno
         /// <summary>
         /// Variable for create the deck of cards
         /// </summary>
-        private static readonly List<ConsoleColor> Color = new List<ConsoleColor>{ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.DarkYellow};
+        public static readonly List<ConsoleColor> Color = new List<ConsoleColor>{ConsoleColor.Red, ConsoleColor.Blue, ConsoleColor.Green, ConsoleColor.DarkYellow};
         private static readonly Dictionary<string, int> CardWithoutColor = new Dictionary<string, int>{ { "Wild", 4 }, { "Wild Draw Four", 4 }};
+        // private static readonly Dictionary<string, int> CardWithoutColor = new Dictionary<string, int>{ { "Wild", 1 }};
         private static readonly Dictionary<string, int> CardWithColor = new Dictionary<string, int>{ { "Zero", 1 }, { "One", 2 }, { "Two", 2 }, { "Three", 2 }, { "Four", 2 }, { "Five", 2 }, { "Six", 2 }, { "Seven", 2 }, { "Eight", 2 }, { "Nine", 2 }, { "Skip", 2 }, { "Reverse", 2 }, { "Draw Two", 2 } };
+        // private static readonly Dictionary<string, int> CardWithColor = new Dictionary<string, int>{ { "Zero", 1 }, { "One", 2 }, { "Two", 2 } };
         public static int LongestCard { get; private set; }
 
         /// <summary>
@@ -46,7 +48,11 @@ namespace Amnesia.classes.Uno
                 }
                 for (var i = 0; i < card.Value; i++)
                 {
-                    deck.Add(new Card(card.Key));
+                    var c = new Card(card.Key)
+                    {
+                        WhiteCard = true
+                    };
+                    deck.Add(c);
                 }
             }
             var finalDeck = new Stack<Card>();

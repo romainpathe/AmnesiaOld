@@ -1,29 +1,25 @@
 ﻿using System;
 using Amnesia.classes.Uno;
-using Amnesia.events;
+using Amnesia.components.Uno;
 
 namespace Amnesia
 {
-    internal class Program
+    internal static class Program
     {
         public static readonly Random Random = new Random();
-        public static int WindowsWidth = Console.WindowWidth;
-        public static int WindowsHeight = Console.WindowHeight;
         
-        public static void Main(string[] args)
+        /// <summary>
+        /// Initializes the program.
+        /// </summary>
+        public static void Main()
         {
             
             Writer.Init();
             Console.CursorVisible = false;
             
             var gameManager = new GameManager();
-            gameManager.StartGame();
-            // ResizeWindow.Init(gameManager);
-            
-            
-            
-            Console.ReadKey();
-
+            Menu.GameManager = gameManager;
+            Menu.Init();
         }
     }
 }
