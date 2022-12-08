@@ -118,9 +118,8 @@ namespace Amnesia.components.Uno
                 }
                 else
                 {
-                    SelectNext();
+                    SelectNext(false);
                 }
-                Writer.Clear(card);
                 Hand.Remove(card);
             }
             ClearDrawHand();
@@ -142,7 +141,7 @@ namespace Amnesia.components.Uno
         /// <summary>
         /// Select the next card in the hand
         /// </summary>
-        public void SelectNext()
+        public void SelectNext(bool clear = true)
         {
             var needMove = false;
             for (var i = 0; i < Hand.Count; i++)
@@ -168,7 +167,7 @@ namespace Amnesia.components.Uno
                     }
                 }
                 LastCardSelected = Hand.IndexOf(nextCard);
-                if(!needMove) Writer.ObjForWrite.Add(nextCard);
+                if(!needMove && clear) Writer.ObjForWrite.Add(nextCard);
                 break;
             }
 
